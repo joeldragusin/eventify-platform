@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  EVENT_PLANNER
+  ADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Event     Event[]
+  orders    Order[]
+  reviews   Review[]
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  date        DateTime
+  time        String
+  capacity    Int
+  price       Float
+  image       String?
+  category    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  //Relation fields
+  planner   User @relation(fields: [plannerId], references: [id])
+  plannerId Int
+
+  venue   Venue? @relation(fields: [venueId], references: [id])
+  venueId Int?
+
+  tickets Ticket[]
+  reviews Review[]
+}
+
+model Venue {
+  id      Int    @id @default(autoincrement())
+  name    String
+  address String
+
+  events Event[]
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+model Ticket {
+  id        Int      @id @default(autoincrement())
+  name      String
+  price     Float
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //Relation to Event
+  event   Event @relation(fields: [eventId], references: [id])
+  eventId Int
+
+  //Relation to OrderItem
+  orderItems OrderItem[]
+  Review     Review[]
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  total     Float
+  status    OrderStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  //Relation to User
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  //Relation to OrderItem
+  orderItems OrderItem[]
+}
+
+model OrderItem {
+  id        Int   @id @default(autoincrement())
+  quantity  Int
+  unitPrice Float
+
+  //Relation to Order
+  order   Order @relation(fields: [orderId], references: [id])
+  orderId Int
+
+  //Relation to Ticket
+  ticket   Ticket @relation(fields: [ticketId], references: [id])
+  ticketId Int
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  //Relations
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  ticket   Ticket? @relation(fields: [ticketId], references: [id])
+  ticketId Int?
+
+  event   Event? @relation(fields: [eventId], references: [id])
+  eventId Int?
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  roleLabel String?
+  message   String
+  rating    Int?
+  createdAt DateTime @default(now())
+}
