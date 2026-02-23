@@ -70,37 +70,52 @@ export default function DeleteEventPage() {
   if (laoding) return <p style={{ padding: 24 }}>Loading...</p>;
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1 style={{ fontSize: 24, fontWeight: "bold" }}>Delete Event</h1>
+    <div className="flex justify-center">
+      <div className="w-full max-w-2xl p-6">
+        <h1 className="text-2xl font-bold">Delete Event</h1>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        {laoding && <p className="mt-2 text-gray-600">Loading...</p>}
 
-      {!event && !error && <p>Event not found.</p>}
+        {error && <p className="mt-2 text-red-600">{error}</p>}
 
-      {event && (
-        <>
-          <p style={{ marginTop: 12 }}>
-            You are about to delete:
-            <b>{event.title}</b>
-          </p>
+        {!laoding && !error && !event && (
+          <p className="mt-4">Event not found.</p>
+        )}
 
-          {!canDelete && (
-            <p style={{ color: "red", marginTop: 12 }}>
-              You are not allowed to delete this event!
+        {!laoding && event && (
+          <>
+            <p className="mt-4">
+              You are about to delete:
+              <span className="ml-1 font-semibold">{event.title}</span>
             </p>
-          )}
 
-          {canDelete && (
-            <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
-              <button onClick={deleteEvent} disabled={deleting}>
-                {deleting ? "Deleting..." : "Yes, delete"}
-              </button>
+            {!canDelete && (
+              <p className="mt-4 text-red-600">
+                You are not allowed to delete this event!
+              </p>
+            )}
 
-              <Link to={`/events/${id}`}>Cancel</Link>
-            </div>
-          )}
-        </>
-      )}
+            {canDelete && (
+              <div className="mt-6 flex gap-3">
+                <button
+                  onClick={deleteEvent}
+                  disabled={deleting}
+                  className="rounded border border-gray-300 px-4 py-2"
+                >
+                  {deleting ? "Deleting..." : "Yes, delete"}
+                </button>
+
+                <Link
+                  to={`/events/${id}`}
+                  className="rounded border border-gray-300 px-4 py-2"
+                >
+                  Cancel
+                </Link>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

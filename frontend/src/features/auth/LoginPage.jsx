@@ -1,15 +1,17 @@
 import api from "../../api/axios.js";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "./authSlice.js";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const nav = useNavigate();
   const dispatch = useDispatch();
 
-  //we define the user's credentials state
+  //we define the user s credentials state
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
 
@@ -18,7 +20,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   async function handleLogin(myCredentials) {
-    //after entering user's credentials, we stop the page refresh to not lose them
+    //after entering user s credentials, we stop the page refresh to not lose them
     myCredentials.preventDefault();
     setError("");
 
@@ -34,44 +36,87 @@ export default function LoginPage() {
       //save the user in Redux, by calling loginSuccess from authSlice.js
       dispatch(loginSuccess(res.data.user));
 
+      toast.success("You logged in with success. Congrats!");
+
       //after both login is successful AND the backend offers me a token (therefore cookie), we get redirected to Events page
-      nav("/events");
+      nav("/");
     } catch (err) {
       console.log("handleLogin Error: ", err);
       const msg =
         err?.response?.data?.error || "Login failed. Check your credentials.";
       setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1 style={{ fontSize: 24, fontWeight: "bold" }}>Login</h1>
-      <form onSubmit={handleLogin} style={{ marginTop: 12, maxWidth: 360 }}>
-        <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(myCredentials) => setEmail(myCredentials.target.value)}
-          style={{ width: "100%", padding: 8, marginTop: 4, marginBottom: 12 }}
-        />
+    <div className="min-h-screen bg-slate-50">
+      <div className="mx-auto max-w-md px-4 py-10">
+        <Link to="/" className="text-sm text-slate-700 hover:underline">
+          Back to Homepage
+        </Link>
 
-        <label>Password</label>
-        <input
-          type="password"
-          value={pwd}
-          onChange={(myCredentials) => setPwd(myCredentials.target.value)}
-          style={{ width: "100%", padding: 8, marginTop: 4, marginBottom: 12 }}
-        />
+        <h1 className="mt-3 text-3xl font-extrabold text-slate-900">Login</h1>
+        <p className="mt-2 text-sm text-slate-600">
+          Log in to manage orders, tickets and reviews.
+        </p>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
+        <div className="mt-6 rounded-xl border bg-white p-6 shadow-sm">
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-slate-800">
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+                placeholder="johndoe@example.com"
+              />
+            </div>
 
-        {error && <p style={{ color: "red", marginTop: 12 }}>{error}</p>}
-      </form>
+            <div>
+              <label className="text-sm font-medium text-slate-800">
+                Password
+              </label>
+              <input
+                type="password"
+                value={pwd}
+                onChange={(e) => setPwd(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+                placeholder="********"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg bg-slate-900 px-4 py-2 font-medium text-white hover:bg-slate-800 disabled:opacity-60"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+
+            {error && (
+              <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {error}
+              </p>
+            )}
+
+            <p className="text-center text-sm text-slate-600">
+              You do not have an account?{" "}
+              <Link
+                to="/register"
+                className="font-medium text-slate-900 underline"
+              >
+                Create one
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

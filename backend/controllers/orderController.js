@@ -131,7 +131,7 @@ export const getMyOrderById = async (req, res) => {
       return res.status(400).json({ error: "Invalid order id." });
     }
 
-    const order = await prisma.order.findMany({
+    const order = await prisma.order.findUnique({
       where: { id },
       include: { orderItems: { include: { ticket: true } } },
     });

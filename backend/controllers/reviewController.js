@@ -5,16 +5,16 @@ import prisma from "../utils/prismaClient.js";
 //am nevoie sa fiu autentificat cu userul meu ca sa ma loghez (deci cu userId)
 export const createReview = async (req, res) => {
   try {
-    //inputul luat din browser
+    //the input is taken from the browser
     const { eventId, rating, comment } = req.body;
 
-    //validez ca exista eventId
+    //i validate the eventId exists
     const eventIdNum = Number(eventId);
     if (!eventIdNum || eventIdNum <= 0 || Number.isNaN(eventIdNum)) {
       return res.status(400).json({ error: "Invalid eventId" });
     }
 
-    //validez rating-ul pentru a fi de la 1 la 5
+    //i validate the rating to be from 1 to 5
     const ratingNum = Number(rating);
     if (
       !ratingNum ||

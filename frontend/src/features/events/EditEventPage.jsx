@@ -94,128 +94,103 @@ export default function EditEventPage() {
     }
   }
 
-  //basic loading render
-  if (loading) return <p>Loading event...</p>;
-
   return (
-    <div style={{ padding: 24 }}>
-      <h1 style={{ fontSize: 24, fontWeight: "bold" }}>Edit Event</h1>
+    <div className="flex justify-center">
+      <div className="w-full max-w-2xl p-6">
+        <h1 className="text-2xl font-bold">Edit Event</h1>
+        {loading && <p className="mt-2 text-gray-600">Loading event...</p>}
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={updateEvent} style={{ maxWidth: 520, marginTop: 12 }}>
-        <div style={{ marginBottom: 12 }}>
-          <label
-            style={{ display: "block", fontWeight: "bold", marginBottom: 6 }}
+        {error && <p className="mt-2 text-red-600">{error}</p>}
+
+        <form onSubmit={updateEvent} className="mt-3 max-w-[520px]">
+          <div className="mb-3">
+            <label className="mb-1.5 block font-semibold">Title</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full rounded border border-gray-300 p-2"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="mb-1.5 block font-semibold">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              className="w-full rounded border border-gray-300 p-2"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="mb-1.5 block font-semibold">Date</label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full rounded border border-gray-300 p-2"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="mb-1.5 block font-semibold">Time</label>
+            <input
+              type="time"
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+              className="w-full rounded border border-gray-300 p-2"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="mb-1.5 block font-semibold">Capacity</label>
+            <input
+              type="number"
+              value={capacity}
+              onChange={(e) => setCapacity(e.target.value)}
+              className="w-full rounded border border-gray-300 p-2"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="mb-1.5 block font-semibold">Price</label>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="w-full rounded border border-gray-300 p-2"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="mb-1.5 block font-semibold">Category</label>
+            <input
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full rounded border border-gray-300 p-2"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="mb-1.5 block font-semibold">
+              Image URL (optional)
+            </label>
+            <input
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+              className="w-full rounded border border-gray-300 p-2"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={saving}
+            className="rounded border border-gray-300 px-3 py-2"
           >
-            Title
-          </label>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label
-            style={{ display: "block", fontWeight: "bold", marginBottom: 6 }}
-          >
-            Description
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={3}
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label
-            style={{ display: "block", fontWeight: "bold", marginBottom: 6 }}
-          >
-            Date
-          </label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label
-            style={{ display: "block", fontWeight: "bold", marginBottom: 6 }}
-          >
-            Time
-          </label>
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label
-            style={{ display: "block", fontWeight: "bold", marginBottom: 6 }}
-          >
-            Capacity
-          </label>
-          <input
-            type="number"
-            value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label
-            style={{ display: "block", fontWeight: "bold", marginBottom: 6 }}
-          >
-            Price
-          </label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label
-            style={{ display: "block", fontWeight: "bold", marginBottom: 6 }}
-          >
-            Category
-          </label>
-          <input
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label
-            style={{ display: "block", fontWeight: "bold", marginBottom: 6 }}
-          >
-            Image URL (optional)
-          </label>
-          <input
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
-
-        <button type="submit" disabled={saving} style={{ padding: "8px 12px" }}>
-          {saving ? "Saving..." : "Save changes"}
-        </button>
-      </form>
+            {saving ? "Saving..." : "Save changes"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

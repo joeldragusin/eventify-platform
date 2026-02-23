@@ -3,7 +3,7 @@ import prisma from "../utils/prismaClient.js";
 
 export const requireAuth = async (req, res, next) => {
   try {
-    //extract my token from cookies
+    //extract and read my token from cookies
     const token = req.cookies?.token;
 
     if (!token) {
@@ -12,7 +12,7 @@ export const requireAuth = async (req, res, next) => {
       });
     }
 
-    //we now decode the token
+    //we now decode the token and validate its integrity
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     //I verify the user exists in the DB and later I will send the inform towards the controller, where it is decided which
@@ -35,6 +35,7 @@ export const requireAuth = async (req, res, next) => {
     }
 
     //to be used on controllers. add the actualUser variable on the request for the controller going to be called
+    //used for downstream auth check
     req.user = actualUser;
 
     next();

@@ -1,6 +1,7 @@
 import api from "../../api/axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function RegisterPage() {
   const nav = useNavigate();
@@ -40,39 +41,83 @@ export default function RegisterPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1 style={{ fontSize: 24, fontWeight: "bold" }}>Register</h1>
+    <div className="min-h-screen bg-slate-50">
+      <div className="mx-auto max-w-md px-4 py-10">
+        <Link to="/" className="text-sm text-slate-700 hover:underline">
+          Back to Homepage
+        </Link>
 
-      <form onSubmit={handleRegister} style={{ maxWidth: 360 }}>
-        <label>Name</label>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 12 }}
-        />
+        <h1 className="mt-3 text-3xl font-extrabold text-slate-900">
+          Register
+        </h1>
+        <p className="mt-2 text-sm text-slate-600">
+          Create an account to place orders and leave reviews.
+        </p>
 
-        <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 12 }}
-        />
+        <div className="mt-6 rounded-xl border bg-white p-6 shadow-sm">
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-slate-800">Name</label>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+                placeholder="Alexandru Popescu"
+              />
+            </div>
 
-        <label>Password</label>
-        <input
-          type="password"
-          value={pwd}
-          onChange={(e) => setPwd(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 12 }}
-        />
+            <div>
+              <label className="text-sm font-medium text-slate-800">
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+                placeholder="alex@example.com"
+              />
+            </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating account..." : "Register"}
-        </button>
+            <div>
+              <label className="text-sm font-medium text-slate-800">
+                Password
+              </label>
+              <input
+                type="password"
+                value={pwd}
+                onChange={(e) => setPwd(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
+                placeholder="********"
+              />
+            </div>
 
-        {error && <p style={{ color: "red", marginTop: 12 }}>{error}</p>}
-      </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-lg bg-slate-900 px-4 py-2 font-medium text-white hover:bg-slate-800 disabled:opacity-60"
+            >
+              {loading ? "Creating account..." : "Register"}
+            </button>
+
+            {error && (
+              <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {error}
+              </p>
+            )}
+
+            <p className="text-center text-sm text-slate-600">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                className="font-medium text-slate-900 underline"
+              >
+                Login
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

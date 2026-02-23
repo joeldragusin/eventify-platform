@@ -5,7 +5,7 @@ export const listTickets = async (req, res) => {
   try {
     const eventId = req.query.eventId ? Number(req.query.eventId) : null;
 
-    if (!eventId || Number.isNaN(req.query.eventId)) {
+    if (!eventId || Number.isNaN(eventId)) {
       return res
         .status(400)
         .json({ error: "eventId query param is required as a number!" });
@@ -16,7 +16,7 @@ export const listTickets = async (req, res) => {
       orderBy: { id: "desc" },
     });
 
-    return res.json({ count: tickets.lenght, tickets });
+    return res.json({ count: tickets.length, tickets });
   } catch (error) {
     console.error("listTickets error: ", error);
     return res.status(500).json({ error: "Server error." });

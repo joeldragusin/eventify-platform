@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import api from "../../api/axios";
+import { Link } from "react-router-dom";
 
 export default function VenuesPage() {
   //we define the state for listing Venues
@@ -72,77 +73,89 @@ export default function VenuesPage() {
   }
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1 style={{ padding: 24, fontWeight: "bold" }}>Venues</h1>
-
-      {/*The form to CREATE a VENUE only as ADMIN or EVENT_PLANNER*/}
-      {canCreate && (
-        <div
-          style={{
-            marginTop: 14,
-            border: "1px solid #ccc",
-            padding: 12,
-            borderRadius: 8,
-            maxWidth: 520,
-          }}
-        >
-          <h3 style={{ marginTop: 0 }}>Create Venue</h3>
-          <form onSubmit={handleCreate}>
-            <div style={{ marginBottom: 10 }}>
-              <label>Name *</label>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                style={{ width: "100%", padding: 8, marginTop: 4 }}
-              />
-            </div>
-
-            <div style={{ marginBottom: 10 }}>
-              <label>Address *</label>
-              <input
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                style={{ width: "100%", padding: 8, marginTop: 4 }}
-              />
-            </div>
-
-            <button type="submit" disabled={saving}>
-              {saving ? "Saving..." : "Create"}
-            </button>
-
-            {formError && (
-              <p style={{ color: "red", marginTop: 14 }}>{formError}</p>
-            )}
-          </form>
+    <div className="min-h-screen bg-slate-50">
+      {/* top bar */}
+      <div className="border-b bg-white">
+        <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
+          <h1 className="text-xl font-bold text-slate-900">Venues</h1>
+          <Link to="/" className="text-sm text-slate-600 hover:text-slate-900">
+            Back to Homepage
+          </Link>
         </div>
-      )}
+      </div>
 
-      {/*The form to LIST a VENUE*/}
-      {loading && <p style={{ marginTop: 14 }}>Loading venues...</p>}
-      {error && <p style={{ color: "red", marginTop: 14 }}>{error}</p>}
+      <div className="mx-auto max-w-3xl px-4 py-6">
+        {/*The form to CREATE a VENUE only as ADMIN or EVENT_PLANNER*/}
+        {canCreate && (
+          <div className="rounded-xl border bg-white p-4 shadow-sm">
+            <h3 className="text-lg font-semibold text-slate-900">
+              Create Venue
+            </h3>
 
-      {!loading && !error && venues.length === 0 && (
-        <p style={{ marginTop: 14 }}>No Venues available yet.</p>
-      )}
+            <form onSubmit={handleCreate} className="mt-4 grid gap-3">
+              <div>
+                <label className="block text-sm font-medium text-slate-700">
+                  Name <span className="text-red-600">*</span>
+                </label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                />
+              </div>
 
-      {!loading && !error && venues.length > 0 && (
-        <ul style={{ marginTop: 16, padding: 0, listStyle: "none" }}>
-          {venues.map((v) => (
-            <li
-              key={v.id}
-              style={{
-                border: "1px solid #ccc",
-                padding: 12,
-                borderRadius: 8,
-                marginBottom: 10,
-              }}
-            >
-              <div style={{ fontWeight: "bold" }}>{v.name}</div>
-              <div style={{ marginTop: 6 }}>{v.address}</div>
-            </li>
-          ))}
-        </ul>
-      )}
+              <div>
+                <label className="block text-sm font-medium text-slate-700">
+                  Address <span className="text-red-600">*</span>
+                </label>
+                <input
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                />
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="rounded-lg bg-slate-900 px-4 py-2 text-white hover:bg-slate-800 disabled:opacity-60"
+                >
+                  {saving ? "Saving..." : "Create"}
+                </button>
+
+                {formError && (
+                  <p className="text-sm text-red-600">{formError}</p>
+                )}
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/*The form to LIST a VENUE*/}
+        <div className="mt-6">
+          {loading && <p className="text-slate-600">Loading venues...</p>}
+          {error && <p className="text-red-600">{error}</p>}
+
+          {!loading && !error && venues.length === 0 && (
+            <p className="text-slate-600">No Venues available yet.</p>
+          )}
+
+          {!loading && !error && venues.length > 0 && (
+            <ul className="grid gap-3">
+              {venues.map((v) => (
+                <li
+                  key={v.id}
+                  className="rounded-xl border bg-white p-4 shadow-sm"
+                >
+                  <div className="font-semibold text-slate-900">{v.name}</div>
+                  <div className="mt-2 text-slate-700">{v.address}</div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

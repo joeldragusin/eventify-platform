@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import { Link } from "react-router-dom";
 
 export default function CreateEventPage() {
   const navigate = useNavigate();
@@ -67,7 +68,7 @@ export default function CreateEventPage() {
       console.log("createEvent error: ", err);
       setError(
         err?.response?.data?.error ||
-          "Event could not be created. Please try again."
+          "Event could not be created. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -76,79 +77,115 @@ export default function CreateEventPage() {
 
   //finally, we render as usual
   return (
-    <div style={{ padding: 24, maxWidth: 600 }}>
-      <h1 style={{ fontSize: 26, fontWeight: "bold" }}>Create Event</h1>
-      <form onSubmit={createEvent} style={{ marginTop: 16 }}>
-        <label>Title *</label>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 10 }}
-        />
+    <div className="p-6">
+      <div className="mx-auto max-w-xl">
+        <Link to="/events" className="text-sm text-gray-700 hover:text-black">
+          Back to Events
+        </Link>
 
-        <label>Description *</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 10 }}
-        />
+        <h1 className="mt-3 text-2xl font-bold">Create Event</h1>
 
-        <label>Date *</label>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 10 }}
-        />
-
-        <label>Time *</label>
-        <input
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 10 }}
-        />
-
-        <label>Capacity *</label>
-        <input
-          value={capacity}
-          onChange={(e) => setCapacity(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 10 }}
-        />
-
-        <label>Price (RON) *</label>
-        <input
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 10 }}
-        />
-
-        <label>Category *</label>
-        <input
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 10 }}
-        />
-
-        <label>Venue *</label>
-        <select
-          value={venueId}
-          onChange={(e) => setVenueId(e.target.value)}
-          style={{ width: "100%", padding: 8, marginBottom: 10 }}
+        <form
+          onSubmit={createEvent}
+          className="mt-4 rounded-lg border border-gray-300 bg-white p-4"
         >
-          <option value="">-- Select Venue --</option>
-          {venues.map((v) => (
-            <option key={v.id} value={v.id}>
-              {v.name}
-            </option>
-          ))}
-        </select>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-medium">Title *</label>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="mt-1 w-full rounded border border-gray-300 p-2"
+              />
+            </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating event..." : "Create Event"}
-        </button>
+            <div>
+              <label className="block text-sm font-medium">Description</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                className="mt-1 w-full rounded border border-gray-300 p-2"
+              />
+            </div>
 
-        {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
-      </form>
+            <div>
+              <label className="block text-sm font-medium">Date *</label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="mt-1 w-full rounded border border-gray-300 p-2"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">Time *</label>
+              <input
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                placeholder="20:30"
+                className="mt-1 w-full rounded border border-gray-300 p-2"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">Capacity *</label>
+              <input
+                type="number"
+                value={capacity}
+                onChange={(e) => setCapacity(e.target.value)}
+                className="mt-1 w-full rounded border border-gray-300 p-2"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">Price (RON) *</label>
+              <input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="mt-1 w-full rounded border border-gray-300 p-2"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">Category</label>
+              <input
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="mt-1 w-full rounded border border-gray-300 p-2"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">Venue</label>
+              <select
+                value={venueId}
+                onChange={(e) => setVenueId(e.target.value)}
+                className="mt-1 w-full rounded border border-gray-300 p-2"
+              >
+                <option value="">-- Select Venue --</option>
+                {venues.map((v) => (
+                  <option key={v.id} value={v.id}>
+                    {v.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="rounded border border-gray-300 px-3 py-1"
+            >
+              {loading ? "Creating event..." : "Create Event"}
+            </button>
+
+            {error && <p className="text-sm text-red-600">{error}</p>}
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

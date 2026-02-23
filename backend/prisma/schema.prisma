@@ -1,24 +1,26 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+//this is the file which defines the postgresql database structure of my application EventUp
+//here we define models (their name in Prisma) which are equivalent to tables in sql
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+//the assmebly instruction itself, meaning this is the command that initiates the ORM as a layer between the db
+//and the backend component
 generator client {
   provider = "prisma-client-js"
 }
 
+//this is the direct config and the conn link is loaded from .env in order to avoid sharing sensitive data here
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+//this is an enumeration defining all roles possible in my application
 enum Role {
   USER
   EVENT_PLANNER
   ADMIN
 }
 
+//table User (it is for all logged in users)
 model User {
   id        Int      @id @default(autoincrement())
   name      String?
@@ -27,11 +29,14 @@ model User {
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Event     Event[]
-  orders    Order[]
-  reviews   Review[]
+
+  //here i defined the relations
+  Event     Event[] //these are events created by the user
+  orders    Order[] //these are orders created by the user
+  reviews   Review[] //these are reviews created by the user
 }
 
+//table for events created in EventUp
 model Event {
   id          Int      @id @default(autoincrement())
   title       String
@@ -45,31 +50,36 @@ model Event {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  //Relation fields
+  //Relation to the event planner
   planner   User @relation(fields: [plannerId], references: [id])
   plannerId Int
 
+  //Relation to a venue
   venue   Venue? @relation(fields: [venueId], references: [id])
   venueId Int?
 
-  tickets Ticket[]
-  reviews Review[]
+  tickets Ticket[] //tickets related to a specific event
+  reviews Review[] //reviews related to an specific event
 }
 
+//table for venues (=locations)
 model Venue {
   id      Int    @id @default(autoincrement())
   name    String
   address String
 
-  events Event[]
+  events Event[] //the existing events within this location
 }
 
+//once again, an enumeration
+//it describes all possible states for an order
 enum OrderStatus {
   PENDING
   PAID
   CANCELLED
 }
 
+//ticket table for an event
 model Ticket {
   id        Int      @id @default(autoincrement())
   name      String
@@ -78,15 +88,16 @@ model Ticket {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  //Relation to Event
+  //Relation to its event
   event   Event @relation(fields: [eventId], references: [id])
   eventId Int
 
   //Relation to OrderItem
-  orderItems OrderItem[]
-  Review     Review[]
+  orderItems OrderItem[] //orderitems pointing to this ticket
+  Review     Review[] //reviews related to this ticket
 }
 
+//table Order
 model Order {
   id        Int         @id @default(autoincrement())
   total     Float
@@ -94,14 +105,16 @@ model Order {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 
-  //Relation to User
+  //Relation to User who created/place the order
   user   User @relation(fields: [userId], references: [id])
   userId Int
 
-  //Relation to OrderItem
+  //Relation to OrderItems
   orderItems OrderItem[]
 }
 
+//only available orders are tickets
+//therefore it represents the ordered ticket
 model OrderItem {
   id        Int   @id @default(autoincrement())
   quantity  Int
@@ -116,23 +129,27 @@ model OrderItem {
   ticketId Int
 }
 
+//reviews table
 model Review {
   id        Int      @id @default(autoincrement())
   rating    Int
   comment   String?
   createdAt DateTime @default(now())
 
-  //Relations
+  //relation to the author of the review
   user   User @relation(fields: [userId], references: [id])
   userId Int
 
+  //relation to the ticket which is optional
   ticket   Ticket? @relation(fields: [ticketId], references: [id])
   ticketId Int?
 
+  //also an optional relation, but to an event
   event   Event? @relation(fields: [eventId], references: [id])
   eventId Int?
 }
 
+//the testimonials table, for "marketing" purposes
 model Testimonial {
   id        Int      @id @default(autoincrement())
   name      String

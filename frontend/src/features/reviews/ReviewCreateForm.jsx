@@ -1,13 +1,19 @@
 import { useState } from "react";
 import api from "../../api/axios";
+import { toast } from "react-toastify";
 
+//this represents the review form which can be submitted and the user is able to see
 export default function ReviewCreateForm({ eventId, onCreated }) {
+  //this is the initial input of the taste
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
 
+  //state for the asynchronos requests
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  //here we handle the submission of the form
+  //we validate the client, call the api from backend reset the form
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -29,17 +35,18 @@ export default function ReviewCreateForm({ eventId, onCreated }) {
         rating: ratingNum,
         comment: comment.trim() || null,
       });
+      toast.success("Your review has been posted!");
 
       //reset the review form to default
       setRating(5);
       setComment("");
 
-      //ii spun parintelui ca s-a creat un review si sa reincerca lista (State-ul)
+      //i tell the parent a review has been created so it reloads/rerenders the reviews (its state)
       if (onCreated) onCreated();
     } catch (err) {
       console.error("ReviewCreateForm error: ", err);
       const msg =
-        err?.response?.error ||
+        err?.response?.data?.error ||
         "Review could not be created. Please try again.";
       setError(msg);
     } finally {
@@ -48,44 +55,43 @@ export default function ReviewCreateForm({ eventId, onCreated }) {
   }
 
   return (
-    <div
-      style={{
-        marginTop: 16,
-        border: "1px solid #ccc",
-        padding: 12,
-        borderRadius: 8,
-      }}
-    >
-      <h3 style={{ margin: 0, marginBottom: 10 }}>Leave a review</h3>
+    <div className="mt-4 rounded-lg border border-gray-300 bg-white p-3">
+      <h3 className="m-0 mb-3 text-lg font-semibold">Leave a review</h3>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 10 }}>
-          <label>Rating (1 to 5 stars)</label>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div>
+          <label className="block text-sm font-medium">
+            Rating (1 to 5 stars)
+          </label>
           <input
             type="number"
             min="1"
             max="5"
             value={rating}
             onChange={(e) => setRating(e.target.value)}
-            style={{ width: "100%", padding: 8, marginTop: 4 }}
+            className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
           />
         </div>
 
-        <div style={{ marginBottom: 10 }}>
-          <label>Comment</label>
+        <div>
+          <label className="block text-sm font-medium">Comment</label>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={3}
-            style={{ width: "100%", padding: 8, marginTop: 4 }}
+            className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
           />
         </div>
 
-        <button type="submit" disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded border border-gray-300 px-3 py-2 text-sm disabled:opacity-60"
+        >
           {loading ? "Sending..." : "Submit review"}
         </button>
 
-        {error && <p style={{ color: "red", marginTop: 10 }}>{error}</p>}
+        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </form>
     </div>
   );

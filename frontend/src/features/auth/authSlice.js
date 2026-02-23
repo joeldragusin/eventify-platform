@@ -27,7 +27,7 @@ const authSlice = createSlice({
 });
 
 //these are used with useDispatch()
-export const { loginSuccess, logout, setAuthError } = authSlice.actions;
+export const { loginSuccess, logout } = authSlice.actions;
 
 //and these are stored in store.js under the name "authReducer"
 export default authSlice.reducer;
