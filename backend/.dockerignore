@@ -1,8 +1,11 @@
 node_modules
 .env
+.env.*
 .git
 tmp
 *.log
 backend_structure*.txt
 raresstructure*.txt
 rares_structure*.txt
+Dockerfile
+.dockerignore
