@@ -4,8 +4,6 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import cloudinary from "cloudinary";
-import fileUpload from "express-fileupload";
 //import testRoutes from "./routes/testRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
@@ -14,7 +12,6 @@ import ticketRoutes from "./routes/ticketRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import testimonialRoutes from "./routes/testimonialRoutes.js";
-import uploadRoutes from "./routes/uploadRoutes.js";
 
 //declar dotenv pentru Prisma
 dotenv.config();
@@ -33,7 +30,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
-app.use(fileUpload({ useTempFiles: true }));
 //app.use("/api/test", testRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
@@ -42,7 +38,6 @@ app.use("/api/tickets", ticketRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/testimonials", testimonialRoutes);
-app.use("/api/uploads", uploadRoutes);
 
 //Pentru testarea ca serverul este in picioare
 app.get("/health", (req, res) => {

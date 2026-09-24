@@ -23,9 +23,6 @@ services:
       DATABASE_URL: postgresql://postgres:1234@postgres:5432/eventify?schema=public
       JWT_SECRET: Rh3inm3t411
       JWT_EXPIRES_IN: 14d
-      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
-      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
-      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
     depends_on:
       - postgres
 
