@@ -1,0 +1,59 @@
+CHANGES ON BRANCH fix/docker-migrations
+=======================================
+
+Goal: fix problems found while reviewing whether the app is built correctly.
+Nothing on `main` was touched; all changes live on this branch.
+
+1. backend/Dockerfile  (fixes: empty database in Docker)
+   - CMD changed from `npm start` to
+       sh -c "npx prisma migrate deploy && npm start"
+   - Why: nothing applied the Prisma migrations, so a fresh Postgres had no
+     tables and every DB query failed. `migrate deploy` only applies existing
+     migration files, is a no-op when up to date, and never resets data.
+     If it fails, the server does not start.
+
+2. docker-compose.yml  (fixes: committed secrets, startup order)
+   - POSTGRES_PASSWORD and JWT_SECRET are no longer hard-coded; they come from
+     a root `.env` file. Compose errors out with a clear message if missing.
+   - DATABASE_URL now uses ${POSTGRES_PASSWORD}.
+   - Added a Postgres healthcheck (pg_isready) and changed backend
+     `depends_on` to `condition: service_healthy`, so migrations run only when
+     the DB accepts connections.
+
+3. .env.example  (new)
+   - Template listing the variables compose needs. Copy to `.env`
+     (already gitignored) and fill in values.
+
+4. backend/package.json  (fixes: fragile ES module setup)
+   - Added "type": "module". server.js and all backend files use `import`;
+     this was only working through Node 22's auto-detection. Verified no
+     backend file uses require()/module.exports, so this is safe.
+
+5. backend/.gitignore + untracked backend/tmp/*
+   - `tmp/` is now ignored and the two committed upload temp files were
+     removed from git tracking (`git rm --cached`; the folder is created at
+     runtime by the Dockerfile).
+
+HOW TO USE AFTER THESE CHANGES
+------------------------------
+  cp .env.example .env        (then edit values)
+  docker compose up --build
+
+IMPORTANT NOTES
+---------------
+ - If you already ran compose before, the postgres_data volume holds the old
+   password (1234). Either set POSTGRES_PASSWORD=1234 in .env, or reset with
+   `docker compose down -v` (this DELETES the DB data).
+ - The old JWT_SECRET and DB password remain in git history. Use a NEW
+   JWT_SECRET in .env (existing login tokens will be invalidated).
+ - Verified: `docker compose config` parses and `node --check server.js`
+   passes. A full `docker compose up` was not run.
+
+NOT CHANGED (left for you to decide)
+------------------------------------
+ - No frontend container/service (needs VITE_API_URL at build time).
+ - Duplicate frontend/src/auth/AuthBootstrap.jsx vs
+   frontend/src/features/auth/AuthBootstrap.jsx.
+ - backend/*structure*.txt dump files are still tracked.
+ - Redundant `npm ci --omit=dev` in the Dockerfile runtime stage (harmless;
+   node_modules is overwritten by the COPY from the build stage).

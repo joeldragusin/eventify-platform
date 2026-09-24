@@ -50,4 +50,9 @@ EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=20s \
   CMD node -e "fetch('http://localhost:5000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
-CMD ["npm", "start"]
+# Apply pending Prisma migrations, then start the server.
+# "migrate deploy" is the production-safe command: it only applies existing
+# migration files (never creates new ones or resets data) and is a no-op when
+# the database is already up to date. If it fails, "&&" stops the container
+# from starting against a broken schema.
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
