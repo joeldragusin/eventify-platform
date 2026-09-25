@@ -37,5 +37,18 @@ services:
       postgres:
         condition: service_healthy
 
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Address the BROWSER uses to reach the backend (baked in at build time).
+        VITE_API_URL: http://localhost:5000/api
+    container_name: eventify-frontend
+    ports:
+      # Host port 5173 must match FRONTEND_URL in the backend (CORS).
+      - "5173:80"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
