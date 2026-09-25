@@ -38,8 +38,8 @@ RUN npm ci --omit=dev && npm cache clean --force
 # custom generated/ path.
 COPY --from=build /app .
 
-# The app writes temp files to /app/tmp; make sure the non-root user owns it.
-RUN mkdir -p /app/tmp && chown -R node:node /app
+# Make sure the non-root user owns the app files.
+RUN chown -R node:node /app
 
 # Drop root. "node" is a built-in unprivileged user in the official image.
 USER node
@@ -50,4 +50,9 @@ EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=20s \
   CMD node -e "fetch('http://localhost:5000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
-CMD ["npm", "start"]
+# Apply pending Prisma migrations, then start the server.
+# "migrate deploy" is the production-safe command: it only applies existing
+# migration files (never creates new ones or resets data) and does nothing when
+# the database is already up to date. If it fails, "&&" stops the container
+# from starting against a broken schema.
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]

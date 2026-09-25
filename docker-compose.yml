@@ -1,3 +1,6 @@
+# Secrets live in a root-level .env file (gitignored, never committed).
+# Copy .env.example to .env and fill in the values before running.
+# "${VAR:?msg}" makes compose stop with a clear error if VAR is missing.
 services:
   postgres:
     image: postgres:15
@@ -5,11 +8,18 @@ services:
     environment:
       POSTGRES_DB: eventify
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    # Reports "healthy" only once Postgres accepts connections. The backend
+    # waits for this, because it runs migrations as soon as it starts.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d eventify"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   backend:
     build:
@@ -20,11 +30,12 @@ services:
     environment:
       PORT: 5000
       FRONTEND_URL: http://localhost:5173
-      DATABASE_URL: postgresql://postgres:1234@postgres:5432/eventify?schema=public
-      JWT_SECRET: Rh3inm3t411
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/eventify?schema=public
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
       JWT_EXPIRES_IN: 14d
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:
