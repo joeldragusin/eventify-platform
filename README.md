@@ -68,31 +68,39 @@ docker exec eventify-postgres psql -U postgres -d eventify \
 
 Log out and back in afterwards, because the role is stored in your login token.
 
-## Local development (without Docker for the app)
+## Local development (without Docker for the apps)
 
-Run only the database in Docker, and the apps directly:
+Run only the database in Docker, and the apps directly. The database container
+needs the root `.env` from the quick start above.
 
 ```bash
 docker compose up postgres
 ```
 
-Backend (`backend/.env` needs `DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN`,
-`FRONTEND_URL`):
+Backend:
 
 ```bash
 cd backend
+cp .env.example .env    # then set the password/secret in backend/.env
 npm ci
 npx prisma migrate deploy
 npm run dev
 ```
 
-Frontend (`frontend/.env` needs `VITE_API_URL=http://localhost:5000/api`):
+In `backend/.env`, `DATABASE_URL` must use the same password as
+`POSTGRES_PASSWORD` in the root `.env` and the published host port `5433`.
+
+Frontend (in a second terminal):
 
 ```bash
 cd frontend
+cp .env.example .env
 npm ci
 npm run dev
 ```
+
+The dev frontend runs on http://localhost:5173, so stop the Docker `frontend`
+container first (only `postgres` is started by the command above).
 
 ## CI
 
