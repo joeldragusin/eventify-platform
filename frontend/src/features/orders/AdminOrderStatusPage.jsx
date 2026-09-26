@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api/axios.js";
 import { useSelector } from "react-redux";
+import PageLayout from "../../components/PageLayout.jsx";
 
 export default function AdminOrderStatusPage() {
   const { id } = useParams();
@@ -38,34 +39,33 @@ export default function AdminOrderStatusPage() {
 
   if (!isAdmin) {
     return (
-      <div style={{ padding: 24 }}>
-        <Link to="/">Back to Home</Link>
-        <p style={{ marginTop: 12 }}>Admins only.</p>
-      </div>
+      <PageLayout title="Update Order Status">
+        <div className="rounded-xl border bg-white p-4 text-slate-700 shadow-sm">
+          Admins only.
+        </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="p-6">
-      <Link
-        to="/admin/orders"
-        className="text-sm text-gray-700 hover:text-black"
-      >
-        Back to Admin Orders
-      </Link>
-
-      <h1 className="mt-3 text-2xl font-bold">Update Order #{id} Status</h1>
-
+    <PageLayout
+      title={`Update Order #${id} Status`}
+      backTo="/admin/orders"
+      backLabel="Back to Admin Orders"
+      width="md"
+    >
       <form
         onSubmit={handleUpdate}
-        className="mt-4 max-w-sm rounded-lg border border-gray-300 p-4"
+        className="rounded-xl border bg-white p-4 shadow-sm"
       >
-        <label className="block text-sm font-medium">Status</label>
+        <label className="block text-sm font-medium text-slate-700">
+          Status
+        </label>
 
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="mt-1 w-full rounded border border-gray-300 p-2"
+          className="mt-1 w-full rounded-lg border border-slate-300 p-2"
         >
           <option value="PENDING">PENDING</option>
           <option value="PAID">PAID</option>
@@ -75,13 +75,13 @@ export default function AdminOrderStatusPage() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-3 rounded border border-gray-300 px-3 py-1"
+          className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-white hover:bg-slate-800 disabled:opacity-60"
         >
           {loading ? "Updating..." : "Update status"}
         </button>
 
         {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
       </form>
-    </div>
+    </PageLayout>
   );
 }

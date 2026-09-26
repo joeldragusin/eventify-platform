@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import api from "../../api/axios.js";
+import PageLayout from "../../components/PageLayout.jsx";
 
 export default function MyOrderDetailsPage() {
   const { id } = useParams();
@@ -32,40 +33,40 @@ export default function MyOrderDetailsPage() {
   }, [id]);
 
   return (
-    <div className="p-6">
-      <Link to="/orders/my" className="text-sm underline">
-        Back to My Orders
-      </Link>
-
-      <h1 className="mt-3 text-2xl font-bold">Order #{id}</h1>
-
-      {loading && <p className="mt-3">Loading order...</p>}
-
-      {error && <p className="mt-3 text-red-600">{error}</p>}
-
-      {!error && !order && <p className="mt-3">Order not found.</p>}
+    <PageLayout
+      title={`Order #${id}`}
+      backTo="/orders/my"
+      backLabel="Back to My Orders"
+    >
+      {loading && <p className="text-slate-600">Loading order...</p>}
+      {error && <p className="text-red-600">{error}</p>}
+      {!loading && !error && !order && (
+        <p className="text-slate-700">Order not found.</p>
+      )}
 
       {!error && order && (
-        <div className="mt-3">
-          <div>
-            <span className="font-semibold">Status:</span> {order.status}
-          </div>
-          <div className="mt-1">
-            <span className="font-semibold">Total:</span> {order.total} RON
+        <div className="rounded-xl border bg-white p-4 shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="text-slate-700">
+              <span className="font-semibold">Total:</span> {order.total} RON
+            </div>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+              {order.status}
+            </span>
           </div>
 
-          <h3 className="mt-4 font-semibold">Items</h3>
+          <h2 className="mt-4 font-semibold text-slate-900">Items</h2>
 
           {!order.orderItems || order.orderItems.length === 0 ? (
-            <p className="mt-2">No items in this order.</p>
+            <p className="mt-2 text-slate-700">No items in this order.</p>
           ) : (
-            <ul className="mt-2 list-disc space-y-2 pl-5">
+            <ul className="mt-2 divide-y">
               {order.orderItems.map((it) => (
-                <li key={it.id}>
-                  <div className="font-semibold">
+                <li key={it.id} className="py-2">
+                  <div className="font-medium text-slate-900">
                     {it.ticket?.name || "Ticket"}
                   </div>
-                  <div className="text-sm">
+                  <div className="text-sm text-slate-700">
                     Qty: {it.quantity} - Unit price: {it.unitPrice} RON
                   </div>
                 </li>
@@ -74,6 +75,6 @@ export default function MyOrderDetailsPage() {
           )}
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 }

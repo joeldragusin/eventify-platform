@@ -1,8 +1,8 @@
-MyOrdersPage.jsx;
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api/axios.js";
 import { useSelector } from "react-redux";
+import PageLayout from "../../components/PageLayout.jsx";
 
 export default function MyOrdersPage() {
   // user vine din Redux (authSlice)
@@ -40,63 +40,62 @@ export default function MyOrdersPage() {
   // daca nu e logat -> arat "go to login"
   if (!user) {
     return (
-      <div style={{ padding: 24 }}>
-        <Link to="/">Back to Home</Link>
-
-        <h1 style={{ fontSize: 24, fontWeight: "bold", marginTop: 12 }}>
-          My Orders
-        </h1>
-
-        <p>You must be logged in to view your orders.</p>
-
-        <Link to="/login">
-          <button>Go to Login</button>
-        </Link>
-      </div>
+      <PageLayout title="My Orders">
+        <div className="rounded-xl border bg-white p-4 shadow-sm">
+          <p className="text-slate-700">
+            You must be logged in to view your orders.
+          </p>
+          <Link
+            to="/login"
+            className="mt-4 inline-block rounded-lg bg-slate-900 px-4 py-2 text-white hover:bg-slate-800"
+          >
+            Go to Login
+          </Link>
+        </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="p-6">
-      <Link to="/" className="text-sm underline">
-        Back to Home
-      </Link>
-
-      <h1 className="mt-3 text-2xl font-bold">My Orders</h1>
-
-      {loading && <p className="mt-3">Loading...</p>}
-      {error && <p className="mt-3 text-red-600">{error}</p>}
+    <PageLayout title="My Orders">
+      {loading && <p className="text-slate-600">Loading...</p>}
+      {error && <p className="text-red-600">{error}</p>}
 
       {!loading && !error && orders.length === 0 && (
-        <p className="mt-3">You have no orders yet.</p>
+        <div className="rounded-xl border bg-white p-4 text-slate-700 shadow-sm">
+          You have no orders yet.
+        </div>
       )}
 
       {!loading && !error && orders.length > 0 && (
-        <ul className="mt-3 space-y-3">
+        <ul className="space-y-3">
           {orders.map((o) => (
-            <li
-              key={o.id}
-              className="rounded-lg border border-gray-300 bg-white p-3"
-            >
-              <div className="font-semibold">
-                Order #{o.id} — {o.status}
+            <li key={o.id} className="rounded-xl border bg-white p-4 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="font-semibold text-slate-900">
+                  Order #{o.id}
+                </div>
+                <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                  {o.status}
+                </span>
               </div>
 
-              <div className="mt-2 text-sm">
+              <div className="mt-2 space-y-0.5 text-sm text-slate-700">
                 <div>Total: {o.total} RON</div>
                 <div>Items: {(o.orderItems || []).length}</div>
                 <div>Date: {String(o.createdAt).slice(0, 10)}</div>
               </div>
 
-              <div className="mt-2">
-                <Link to={`/orders/my/${o.id}`} className="text-sm underline">
-                  View details
-                </Link>
-              </div>
+              <Link
+                to={`/orders/my/${o.id}`}
+                className="mt-3 inline-block text-sm font-medium text-slate-900 underline"
+              >
+                View details
+              </Link>
             </li>
           ))}
         </ul>
       )}
-    </div>
+    </PageLayout>
   );
 }
