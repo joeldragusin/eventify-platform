@@ -1,0 +1,69 @@
+# Continuous Integration: runs automatically on every pull request and on every
+# push to main. It builds and checks the app so problems show up BEFORE merging.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Cancel an older run of the same branch when a newer commit is pushed.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least privilege: these jobs only need to read the code.
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend (lint + build)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      # "npm ci" installs exactly what package-lock.json says (reproducible).
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+
+  backend:
+    name: Backend (install + checks)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      # Catches syntax errors without starting the server.
+      - run: node --check server.js
+      # Checks that schema.prisma is valid. The URL is a dummy: validate only
+      # needs the variable to exist, it never connects to a database.
+      - run: npx prisma validate
+        env:
+          DATABASE_URL: postgresql://user:pass@localhost:5432/db
+
+  docker:
+    name: Docker images build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Proves both Dockerfiles still build. Nothing is pushed anywhere.
+      - name: Build backend image
+        run: docker build ./backend
+      - name: Build frontend image
+        run: docker build ./frontend

@@ -4,7 +4,7 @@ import api from "../../api/axios.js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-export default function CreateOrderForm({ eventId, tickets, onPlaced }) {
+export default function CreateOrderForm({ tickets, onPlaced }) {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const isLoggedIn = !!user;
