@@ -7,8 +7,7 @@ body {
   height: 100%;
 }
 
-/* Always render the app in its light theme with an explicit background, so
-   pages never depend on the browser's default canvas colour. */
+/* Explicit colours, so pages never depend on the browser's default canvas. */
 html {
   color-scheme: light;
 }
@@ -17,4 +16,14 @@ body {
   margin: 0;
   background-color: #f8fafc; /* slate-50 */
   color: #0f172a; /* slate-900 */
+}
+
+/* Dark theme: enabled by the "dark" class on <html> (see ThemeToggle.jsx). */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #020617; /* slate-950 */
+  color: #e2e8f0; /* slate-200 */
 }

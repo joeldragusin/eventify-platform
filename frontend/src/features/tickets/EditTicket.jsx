@@ -77,7 +77,7 @@ export default function EditTicket({ ticket, onSaved, onCancel }) {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             disabled={saving}
           />
         </div>
@@ -88,7 +88,7 @@ export default function EditTicket({ ticket, onSaved, onCancel }) {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             disabled={saving}
           />
         </div>
@@ -99,7 +99,7 @@ export default function EditTicket({ ticket, onSaved, onCancel }) {
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             disabled={saving}
           />
         </div>
@@ -108,7 +108,7 @@ export default function EditTicket({ ticket, onSaved, onCancel }) {
           <button
             type="submit"
             disabled={saving}
-            className="px-3 py-1.5 text-sm rounded border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
           >
             {saving ? "Saving..." : "Save"}
           </button>
@@ -118,14 +118,14 @@ export default function EditTicket({ ticket, onSaved, onCancel }) {
               type="button"
               onClick={onCancel}
               disabled={saving}
-              className="px-3 py-1.5 text-sm rounded border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
             >
               Cancel
             </button>
           )}
         </div>
 
-        {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
+        {error && <p className="text-sm text-red-600 mt-1 dark:text-red-400">{error}</p>}
       </div>
     </form>
   );

@@ -38,16 +38,21 @@ export default function LogoutButton() {
   }
 
   return (
-    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-      <span style={{ fontSize: 14 }}>
-        Logged in as: <b>{user?.name || user?.email}</b>
+    <div className="flex flex-wrap items-center gap-3">
+      <span className="text-sm text-slate-700 dark:text-slate-300">
+        Logged in as:{" "}
+        <b className="font-semibold text-slate-900 dark:text-slate-100">
+          {user?.name || user?.email}
+        </b>
       </span>
 
-      <div>
-        <button onClick={handleLogout} disabled={loading}>
-          {loading ? "Logging out..." : "Logout"}
-        </button>
-      </div>
+      <button
+        onClick={handleLogout}
+        disabled={loading}
+        className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+      >
+        {loading ? "Logging out..." : "Logout"}
+      </button>
     </div>
   );
 }

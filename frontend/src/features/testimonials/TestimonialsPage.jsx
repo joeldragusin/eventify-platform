@@ -109,12 +109,12 @@ export default function TestimonialsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       {/* top bar */}
-      <div className="border-b bg-white">
+      <div className="border-b bg-white dark:bg-slate-800 dark:border-slate-700">
         <div className="mx-auto max-w-3xl px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-slate-900">Testimonials</h1>
-          <Link to="/" className="text-sm text-slate-600 hover:text-slate-900">
+          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">Testimonials</h1>
+          <Link to="/" className="text-sm text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100">
             Back to Homepage
           </Link>
         </div>
@@ -123,48 +123,48 @@ export default function TestimonialsPage() {
       <div className="mx-auto max-w-3xl px-4 py-6">
         {/*Here is defined the Testimonial creation only for ADMIN*/}
         {isAdmin && (
-          <div className="rounded-xl border bg-white p-4 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">
+          <div className="rounded-xl border bg-white p-4 shadow-sm dark:bg-slate-800 dark:border-slate-700">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
               Create Testimonial (Admin)
             </h3>
 
             <form onSubmit={handleCreate} className="mt-4 grid gap-3">
               <div>
-                <label className="block text-sm font-medium text-slate-700">
-                  Name <span className="text-red-600">*</span>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Name <span className="text-red-600 dark:text-red-400">*</span>
                 </label>
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 dark:border-slate-600 dark:text-slate-100 dark:bg-slate-900"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Role label (optional)
                 </label>
                 <input
                   value={roleLabel}
                   onChange={(e) => setRoleLabel(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 dark:border-slate-600 dark:text-slate-100 dark:bg-slate-900"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700">
-                  Message <span className="text-red-600">*</span>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Message <span className="text-red-600 dark:text-red-400">*</span>
                 </label>
                 <textarea
                   rows={3}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                  className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 dark:border-slate-600 dark:text-slate-100 dark:bg-slate-900"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Rating (1...5 optional)
                 </label>
                 <input
@@ -173,7 +173,7 @@ export default function TestimonialsPage() {
                   max="5"
                   value={rating}
                   onChange={(e) => setRating(e.target.value)}
-                  className="mt-1 w-32 rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20"
+                  className="mt-1 w-32 rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/20 dark:border-slate-600 dark:text-slate-100 dark:bg-slate-900"
                 />
               </div>
 
@@ -181,13 +181,13 @@ export default function TestimonialsPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-lg bg-slate-900 px-4 py-2 text-white hover:bg-slate-800 disabled:opacity-60"
+                  className="rounded-lg bg-slate-900 px-4 py-2 text-white hover:bg-slate-800 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
                 >
                   {saving ? "Saving..." : "Create"}
                 </button>
 
                 {formError && (
-                  <p className="text-sm text-red-600">{formError}</p>
+                  <p className="text-sm text-red-600 dark:text-red-400">{formError}</p>
                 )}
               </div>
             </form>
@@ -196,11 +196,11 @@ export default function TestimonialsPage() {
 
         {/*Here is defined listing of Testimonials*/}
         <div className="mt-6">
-          {loading && <p className="text-slate-600">Loading...</p>}
-          {error && <p className="text-red-600">{error}</p>}
+          {loading && <p className="text-slate-600 dark:text-slate-400">Loading...</p>}
+          {error && <p className="text-red-600 dark:text-red-400">{error}</p>}
 
           {!loading && !error && testimonials.length === 0 && (
-            <p className="text-slate-600">No testimonials yet.</p>
+            <p className="text-slate-600 dark:text-slate-400">No testimonials yet.</p>
           )}
 
           {!loading && !error && testimonials.length > 0 && (
@@ -208,23 +208,23 @@ export default function TestimonialsPage() {
               {testimonials.map((t) => (
                 <li
                   key={t.id}
-                  className="rounded-xl border bg-white p-4 shadow-sm"
+                  className="rounded-xl border bg-white p-4 shadow-sm dark:bg-slate-800 dark:border-slate-700"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="font-semibold text-slate-900">
+                      <div className="font-semibold text-slate-900 dark:text-slate-100">
                         {t.name}{" "}
                         {t.roleLabel ? (
-                          <span className="font-normal text-slate-500">
+                          <span className="font-normal text-slate-500 dark:text-slate-400">
                             — {t.roleLabel}
                           </span>
                         ) : null}
                       </div>
 
-                      <div className="mt-2 text-slate-700">{t.message}</div>
+                      <div className="mt-2 text-slate-700 dark:text-slate-300">{t.message}</div>
 
                       {t.rating !== null && t.rating !== undefined && (
-                        <div className="mt-2 text-sm text-slate-600">
+                        <div className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                           Rating: <span>{t.rating}</span>/5
                         </div>
                       )}
@@ -234,7 +234,7 @@ export default function TestimonialsPage() {
                     {isAdmin && (
                       <button
                         onClick={() => handleDelete(t.id)}
-                        className="shrink-0 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 hover:bg-red-100"
+                        className="shrink-0 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-red-950 dark:text-red-400"
                       >
                         Delete
                       </button>

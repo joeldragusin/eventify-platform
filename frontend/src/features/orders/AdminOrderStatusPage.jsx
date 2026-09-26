@@ -40,7 +40,7 @@ export default function AdminOrderStatusPage() {
   if (!isAdmin) {
     return (
       <PageLayout title="Update Order Status">
-        <div className="rounded-xl border bg-white p-4 text-slate-700 shadow-sm">
+        <div className="rounded-xl border bg-white p-4 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
           Admins only.
         </div>
       </PageLayout>
@@ -56,16 +56,16 @@ export default function AdminOrderStatusPage() {
     >
       <form
         onSubmit={handleUpdate}
-        className="rounded-xl border bg-white p-4 shadow-sm"
+        className="rounded-xl border bg-white p-4 shadow-sm dark:bg-slate-800 dark:border-slate-700"
       >
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Status
         </label>
 
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="mt-1 w-full rounded-lg border border-slate-300 p-2"
+          className="mt-1 w-full rounded-lg border border-slate-300 p-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
         >
           <option value="PENDING">PENDING</option>
           <option value="PAID">PAID</option>
@@ -75,12 +75,12 @@ export default function AdminOrderStatusPage() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-white hover:bg-slate-800 disabled:opacity-60"
+          className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-white hover:bg-slate-800 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
         >
           {loading ? "Updating..." : "Update status"}
         </button>
 
-        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
       </form>
     </PageLayout>
   );

@@ -46,12 +46,12 @@ export default function TicketsList({ eventId, refreshKey, onRefresh }) {
 
   return (
     <div className="space-y-3">
-      {loading && <p className="text-sm text-gray-700">Loading tickets...</p>}
+      {loading && <p className="text-sm text-gray-700 dark:text-slate-300">Loading tickets...</p>}
 
-      {error && <p className="text-sm text-gray-700">{error}</p>}
+      {error && <p className="text-sm text-gray-700 dark:text-slate-300">{error}</p>}
 
       {!loading && !error && tickets.length === 0 && (
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-gray-700 dark:text-slate-300">
           No tickets are available for this event.
         </p>
       )}
@@ -59,11 +59,11 @@ export default function TicketsList({ eventId, refreshKey, onRefresh }) {
       {!loading && !error && tickets.length > 0 && (
         <ul className="space-y-2">
           {tickets.map((t) => (
-            <li key={t.id} className="rounded-lg border bg-white p-4 shadow-sm">
+            <li key={t.id} className="rounded-xl border bg-white p-4 shadow-sm dark:bg-slate-800 dark:border-slate-700">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <div className="text-sm font-semibold">{t.name}</div>
-                  <div className="mt-1 text-sm text-gray-700">
+                  <div className="mt-1 text-sm text-gray-700 dark:text-slate-300">
                     <div>
                       <span className="font-medium">Price (RON):</span>{" "}
                       {t.price}
@@ -80,7 +80,7 @@ export default function TicketsList({ eventId, refreshKey, onRefresh }) {
                     <button
                       type="button"
                       onClick={() => setEditingTicket(t)}
-                      className="inline-flex items-center rounded-md border px-3 py-2 text-sm font-medium hover:bg-gray-50"
+                      className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
                     >
                       Edit
                     </button>
@@ -101,7 +101,7 @@ export default function TicketsList({ eventId, refreshKey, onRefresh }) {
 
       {/* Edit form */}
       {canManage && editingTicket && (
-        <div className="rounded-lg border bg-gray-50 p-4">
+        <div className="rounded-xl border bg-slate-50 p-4 dark:bg-slate-900 dark:border-slate-700">
           <EditTicket
             ticket={editingTicket}
             onCancel={() => setEditingTicket(null)}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import PageLayout from "../../components/PageLayout.jsx";
 
 export default function EditEventPage() {
   //useParams takes the id from the URL exactly as written in AppRouter.jsx for this specific page
@@ -66,6 +67,7 @@ export default function EditEventPage() {
     //we validate the input of the descriptors
     if (!title || !date || !time || !capacity || !price) {
       setError("Title, date, time, capacity and price are required!");
+      return;
     }
 
     try {
@@ -95,102 +97,110 @@ export default function EditEventPage() {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="w-full max-w-2xl p-6">
-        <h1 className="text-2xl font-bold">Edit Event</h1>
-        {loading && <p className="mt-2 text-gray-600">Loading event...</p>}
+    <PageLayout
+      title="Edit Event"
+      backTo={`/events/${id}`}
+      backLabel="Back to Event"
+      width="md"
+    >
+      {loading && <p className="mb-3 text-slate-600 dark:text-slate-400">Loading event...</p>}
 
-        {error && <p className="mt-2 text-red-600">{error}</p>}
+      {error && <p className="mb-3 text-red-600 dark:text-red-400">{error}</p>}
 
-        <form onSubmit={updateEvent} className="mt-3 max-w-[520px]">
-          <div className="mb-3">
-            <label className="mb-1.5 block font-semibold">Title</label>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded border border-gray-300 p-2"
-            />
-          </div>
+      <form
+        onSubmit={updateEvent}
+        className="space-y-4 rounded-xl border bg-white p-4 shadow-sm dark:bg-slate-800 dark:border-slate-700"
+      >
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Title
+          </label>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Description
+          </label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={3}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Date
+          </label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Time
+          </label>
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Capacity
+          </label>
+          <input
+            type="number"
+            value={capacity}
+            onChange={(e) => setCapacity(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Price (RON)
+          </label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Category
+          </label>
+          <input
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Image URL (optional)
+          </label>
+          <input
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
 
-          <div className="mb-3">
-            <label className="mb-1.5 block font-semibold">Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-              className="w-full rounded border border-gray-300 p-2"
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="mb-1.5 block font-semibold">Date</label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full rounded border border-gray-300 p-2"
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="mb-1.5 block font-semibold">Time</label>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="w-full rounded border border-gray-300 p-2"
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="mb-1.5 block font-semibold">Capacity</label>
-            <input
-              type="number"
-              value={capacity}
-              onChange={(e) => setCapacity(e.target.value)}
-              className="w-full rounded border border-gray-300 p-2"
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="mb-1.5 block font-semibold">Price</label>
-            <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full rounded border border-gray-300 p-2"
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="mb-1.5 block font-semibold">Category</label>
-            <input
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded border border-gray-300 p-2"
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="mb-1.5 block font-semibold">
-              Image URL (optional)
-            </label>
-            <input
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              className="w-full rounded border border-gray-300 p-2"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={saving}
-            className="rounded border border-gray-300 px-3 py-2"
-          >
-            {saving ? "Saving..." : "Save changes"}
-          </button>
-        </form>
-      </div>
-    </div>
+        <button type="submit" disabled={saving} className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200">
+          {saving ? "Saving..." : "Save changes"}
+        </button>
+      </form>
+    </PageLayout>
   );
 }

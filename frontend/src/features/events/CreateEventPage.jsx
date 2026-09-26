@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-import { Link } from "react-router-dom";
+import PageLayout from "../../components/PageLayout.jsx";
 
 export default function CreateEventPage() {
   const navigate = useNavigate();
@@ -13,8 +13,8 @@ export default function CreateEventPage() {
   const [time, setTime] = useState(""); //ex: "20:30"""
   const [capacity, setCapacity] = useState("");
   const [price, setPrice] = useState("");
-  const [venueId, setVenueId] = useState();
-  const [category, setCategory] = useState();
+  const [venueId, setVenueId] = useState("");
+  const [category, setCategory] = useState("");
 
   //defining as state the static image, so we replace Cloudinary
   const [image] = useState("/images/concert_1.jpg");
@@ -46,6 +46,7 @@ export default function CreateEventPage() {
     //we validate the input of the descriptors
     if (!title || !date || !time || !capacity || !price) {
       setError("Title, date, time, capacity and price are required!");
+      return;
     }
 
     try {
@@ -77,115 +78,115 @@ export default function CreateEventPage() {
 
   //finally, we render as usual
   return (
-    <div className="p-6">
-      <div className="mx-auto max-w-xl">
-        <Link to="/events" className="text-sm text-gray-700 hover:text-black">
-          Back to Events
-        </Link>
+    <PageLayout
+      title="Create Event"
+      backTo="/events"
+      backLabel="Back to Events"
+      width="md"
+    >
+      <form
+        onSubmit={createEvent}
+        className="space-y-4 rounded-xl border bg-white p-4 shadow-sm dark:bg-slate-800 dark:border-slate-700"
+      >
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Title <span className="text-red-600 dark:text-red-400">*</span>
+          </label>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Description
+          </label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={3}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Date <span className="text-red-600 dark:text-red-400">*</span>
+          </label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Time <span className="text-red-600 dark:text-red-400">*</span>
+          </label>
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Capacity <span className="text-red-600 dark:text-red-400">*</span>
+          </label>
+          <input
+            type="number"
+            value={capacity}
+            onChange={(e) => setCapacity(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Price (RON) <span className="text-red-600 dark:text-red-400">*</span>
+          </label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Category
+          </label>
+          <input
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Venue
+          </label>
+          <select
+            value={venueId}
+            onChange={(e) => setVenueId(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+          >
+            <option value="">-- Select Venue --</option>
+            {venues.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <h1 className="mt-3 text-2xl font-bold">Create Event</h1>
+        <button type="submit" disabled={loading} className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200">
+          {loading ? "Creating event..." : "Create Event"}
+        </button>
 
-        <form
-          onSubmit={createEvent}
-          className="mt-4 rounded-lg border border-gray-300 bg-white p-4"
-        >
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium">Title *</label>
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="mt-1 w-full rounded border border-gray-300 p-2"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Description</label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                className="mt-1 w-full rounded border border-gray-300 p-2"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Date *</label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="mt-1 w-full rounded border border-gray-300 p-2"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Time *</label>
-              <input
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                placeholder="20:30"
-                className="mt-1 w-full rounded border border-gray-300 p-2"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Capacity *</label>
-              <input
-                type="number"
-                value={capacity}
-                onChange={(e) => setCapacity(e.target.value)}
-                className="mt-1 w-full rounded border border-gray-300 p-2"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Price (RON) *</label>
-              <input
-                type="number"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="mt-1 w-full rounded border border-gray-300 p-2"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Category</label>
-              <input
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="mt-1 w-full rounded border border-gray-300 p-2"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Venue</label>
-              <select
-                value={venueId}
-                onChange={(e) => setVenueId(e.target.value)}
-                className="mt-1 w-full rounded border border-gray-300 p-2"
-              >
-                <option value="">-- Select Venue --</option>
-                {venues.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="rounded border border-gray-300 px-3 py-1"
-            >
-              {loading ? "Creating event..." : "Create Event"}
-            </button>
-
-            {error && <p className="text-sm text-red-600">{error}</p>}
-          </div>
-        </form>
-      </div>
-    </div>
+        {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+      </form>
+    </PageLayout>
   );
 }
