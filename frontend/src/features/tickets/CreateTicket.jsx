@@ -80,10 +80,10 @@ export default function CreateTicket({ eventId, onCreation }) {
   if (!isOwner) return null;
 
   return (
-    <div className="mt-4 border border-gray-300 rounded-lg p-3 max-w-[520px]">
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-900">
       <h3 className="mt-0 text-base font-semibold">Create Ticket</h3>
 
-      {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
+      {error && <p className="text-sm text-red-600 mt-2 dark:text-red-400">{error}</p>}
 
       <form onSubmit={handleCreate} className="mt-3">
         <div className="mb-3">
@@ -91,7 +91,7 @@ export default function CreateTicket({ eventId, onCreation }) {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             disabled={loading}
           />
         </div>
@@ -102,7 +102,7 @@ export default function CreateTicket({ eventId, onCreation }) {
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             disabled={loading}
           />
         </div>
@@ -113,7 +113,7 @@ export default function CreateTicket({ eventId, onCreation }) {
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 mt-1"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
             disabled={loading}
           />
         </div>
@@ -121,7 +121,7 @@ export default function CreateTicket({ eventId, onCreation }) {
         <button
           type="submit"
           disabled={loading}
-          className="px-3 py-1.5 text-sm rounded border border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
         >
           {loading ? "Creating..." : "Create Ticket"}
         </button>

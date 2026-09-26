@@ -100,15 +100,17 @@ export default function CreateOrderForm({ tickets, onPlaced }) {
 
   if (!tickets || tickets.length === 0) {
     return (
-      <div style={{ marginTop: 16 }}>
-        <h3 style={{ margin: 0 }}>Order tickets</h3>
-        <p>No tickets available for purchase.</p>
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-900">
+        <h3 className="font-semibold">Order tickets</h3>
+        <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">
+          No tickets available for purchase.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="mt-4 max-w-[520px] rounded-lg border border-gray-300 bg-white p-3">
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-900">
       <h3 className="mt-0 font-semibold">Order tickets</h3>
 
       {!isLoggedIn && (
@@ -117,7 +119,7 @@ export default function CreateOrderForm({ tickets, onPlaced }) {
           <button
             type="button"
             onClick={() => navigate("/login")}
-            className="rounded border border-gray-300 px-2 py-1 text-sm"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
           >
             Go to Login
           </button>
@@ -128,7 +130,7 @@ export default function CreateOrderForm({ tickets, onPlaced }) {
         {(tickets || []).map((t) => (
           <div
             key={t.id}
-            className="flex items-center justify-between gap-2 border-b border-gray-200 py-2"
+            className="flex items-center justify-between gap-2 border-b border-gray-200 py-2 dark:border-slate-700"
           >
             <div className="flex-1">
               <div className="font-semibold">{t.name}</div>
@@ -143,7 +145,7 @@ export default function CreateOrderForm({ tickets, onPlaced }) {
               max={t.quantity}
               value={qtyByTicketId[t.id] ?? 0}
               onChange={(e) => setQty(t.id, e.target.value)}
-              className="w-20 rounded border border-gray-300 px-2 py-1"
+              className="w-20 rounded-lg border border-slate-300 px-2 py-1 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
               disabled={!isLoggedIn || loading}
             />
           </div>
@@ -154,12 +156,12 @@ export default function CreateOrderForm({ tickets, onPlaced }) {
         <button
           type="submit"
           disabled={!isLoggedIn || loading}
-          className="mt-3 rounded border border-gray-300 px-3 py-1"
+          className="mt-3 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
         >
           {loading ? "Placing order..." : "Place order"}
         </button>
 
-        {error && <p className="mt-2 text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-red-600 dark:text-red-400">{error}</p>}
       </form>
     </div>
   );

@@ -6,7 +6,7 @@ export default function DeleteTicket({ ticketId, onDeleted }) {
   const [deleting, setDeleting] = useState(false);
 
   async function handleDelete() {
-    const ok = window.confirm("Are you sure you want to delete this event?");
+    const ok = window.confirm("Are you sure you want to delete this ticket?");
     if (!ok) return;
 
     try {
@@ -29,7 +29,7 @@ export default function DeleteTicket({ ticketId, onDeleted }) {
     <button
       onClick={handleDelete}
       disabled={deleting}
-      className="px-3 py-1.5 text-sm rounded border-gray-300 bg-white hover:bg-gray-100 disabled:opacity-60 disabled:cursor-not-allowed"
+      className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-60 dark:border-red-900 dark:bg-slate-800 dark:text-red-400 dark:hover:bg-red-950"
     >
       {deleting ? "Deleting" : "Delete"}
     </button>

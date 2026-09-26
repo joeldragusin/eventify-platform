@@ -8,6 +8,7 @@ import CreateTicket from "../tickets/CreateTicket.jsx";
 import { useSelector } from "react-redux";
 import LoginButton from "../../components/LoginButton.jsx";
 import CreateOrderPage from "../orders/CreateOrderPage.jsx";
+import PageLayout from "../../components/PageLayout.jsx";
 
 export default function EventsDetailsPage() {
   //conditions added before creating EditEventPage.jsx and DeleteEventPage.jsx, so we can access both Pages
@@ -66,27 +67,27 @@ export default function EventsDetailsPage() {
   }, [id, ticketsRefreshKey]);
 
   return (
-    <div className="mx-auto max-w-5xl p-6">
-      {/* top back link */}
-      <div className="mb-4">
-        <Link to="/events" className="text-sm font-medium text-blue-600">
-          Back to Events
-        </Link>
-      </div>
-
+    <PageLayout
+      title={event?.title || "Event"}
+      backTo="/events"
+      backLabel="Back to Events"
+      width="xl"
+    >
       {/* loading / error */}
       {loading && (
-        <div className="rounded-lg border bg-white p-4 text-sm">Loading...</div>
+        <div className="rounded-xl border bg-white p-4 text-sm text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
+          Loading...
+        </div>
       )}
 
       {error && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400">
           {error}
         </div>
       )}
 
       {!loading && !error && !event && (
-        <div className="rounded-lg border bg-white p-4 text-sm">
+        <div className="rounded-xl border bg-white p-4 text-sm text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
           Event not found.
         </div>
       )}
@@ -95,19 +96,22 @@ export default function EventsDetailsPage() {
       {!loading && !error && event && (
         <div className="space-y-6">
           {/* header card */}
-          <div className="rounded-xl border bg-white p-5 shadow-sm">
+          <div className="rounded-xl border bg-white p-5 shadow-sm dark:bg-slate-800 dark:border-slate-700">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <h1 className="text-2xl font-bold">{event.title}</h1>
-                <div className="mt-2 text-sm text-gray-700">
-                  <div>
-                    <span className="font-medium">Price:</span> {event.price}{" "}
-                    RON
-                  </div>
-                  <div>
-                    <span className="font-medium">Capacity:</span>{" "}
-                    {event.capacity} seats
-                  </div>
+              <div className="space-y-0.5 text-sm text-slate-700 dark:text-slate-300">
+                <div>
+                  <span className="font-medium">Date:</span>{" "}
+                  {String(event.date).slice(0, 10)}
+                </div>
+                <div>
+                  <span className="font-medium">Time:</span> {event.time}
+                </div>
+                <div>
+                  <span className="font-medium">Price:</span> {event.price} RON
+                </div>
+                <div>
+                  <span className="font-medium">Capacity:</span>{" "}
+                  {event.capacity} seats
                 </div>
               </div>
 
@@ -115,13 +119,13 @@ export default function EventsDetailsPage() {
                 <div className="flex gap-3">
                   <Link
                     to={`/events/${event.id}/edit`}
-                    className="inline-flex items-center rounded-md border px-3 py-2 text-sm font-medium hover:bg-gray-50"
+                    className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
                   >
                     Edit
                   </Link>
                   <Link
                     to={`/events/${event.id}/delete`}
-                    className="inline-flex items-center rounded-md border border-red-200 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
+                    className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-60 dark:border-red-900 dark:bg-slate-800 dark:text-red-400 dark:hover:bg-red-950"
                   >
                     Delete
                   </Link>
@@ -130,7 +134,7 @@ export default function EventsDetailsPage() {
             </div>
 
             {event.description && (
-              <p className="mt-4 text-sm text-gray-800">{event.description}</p>
+              <p className="mt-4 text-sm text-slate-800 dark:text-slate-200">{event.description}</p>
             )}
 
             {event.image && (
@@ -138,7 +142,7 @@ export default function EventsDetailsPage() {
                 <img
                   src={event.image}
                   alt="event"
-                  className="w-full max-w-2xl rounded-lg border object-cover"
+                  className="w-full max-w-2xl rounded-lg border object-cover dark:border-slate-700"
                 />
               </div>
             )}
@@ -146,21 +150,21 @@ export default function EventsDetailsPage() {
             {/* venue + planner */}
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {event.venue && (
-                <div className="rounded-lg border bg-gray-50 p-4">
+                <div className="rounded-lg border bg-slate-50 p-4 dark:bg-slate-900 dark:border-slate-700">
                   <div className="text-sm font-semibold">Venue</div>
-                  <div className="mt-1 text-sm text-gray-800">
+                  <div className="mt-1 text-sm text-slate-800 dark:text-slate-200">
                     <div>{event.venue.name}</div>
-                    <div className="text-gray-600">{event.venue.address}</div>
+                    <div className="text-slate-600 dark:text-slate-400">{event.venue.address}</div>
                   </div>
                 </div>
               )}
 
               {event.planner && (
-                <div className="rounded-lg border bg-gray-50 p-4">
+                <div className="rounded-lg border bg-slate-50 p-4 dark:bg-slate-900 dark:border-slate-700">
                   <div className="text-sm font-semibold">Planner</div>
-                  <div className="mt-1 text-sm text-gray-800">
+                  <div className="mt-1 break-all text-sm text-slate-800 dark:text-slate-200">
                     <div>{event.planner.name}</div>
-                    <div className="text-gray-600">{event.planner.email}</div>
+                    <div className="text-slate-600 dark:text-slate-400">{event.planner.email}</div>
                   </div>
                 </div>
               )}
@@ -168,7 +172,7 @@ export default function EventsDetailsPage() {
           </div>
 
           {/* Tickets section */}
-          <div className="rounded-xl border bg-white p-5 shadow-sm">
+          <div className="rounded-xl border bg-white p-5 shadow-sm dark:bg-slate-800 dark:border-slate-700">
             <h2 className="mb-3 text-lg font-bold">Tickets</h2>
 
             <TicketsList
@@ -202,7 +206,7 @@ export default function EventsDetailsPage() {
           </div>
 
           {/* Reviews section */}
-          <div className="rounded-xl border bg-white p-5 shadow-sm">
+          <div className="rounded-xl border bg-white p-5 shadow-sm dark:bg-slate-800 dark:border-slate-700">
             <h2 className="mb-3 text-lg font-bold">Reviews</h2>
 
             <div className="mb-4">
@@ -224,6 +228,6 @@ export default function EventsDetailsPage() {
           </div>
         </div>
       )}
-    </div>
+    </PageLayout>
   );
 }

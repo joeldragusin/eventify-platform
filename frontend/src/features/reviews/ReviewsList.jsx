@@ -64,7 +64,7 @@ export default function ReviewsList({ eventId, refreshKey, onRefresh }) {
       <h3 className="text-lg font-semibold">Reviews</h3>
 
       {loading && <p className="mt-2">Loading reviews...</p>}
-      {error && <p className="mt-2 text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-red-600 dark:text-red-400">{error}</p>}
 
       {!loading && !error && reviews.length === 0 && (
         <p className="mt-2">No reviews yet for this event!</p>
@@ -79,7 +79,7 @@ export default function ReviewsList({ eventId, refreshKey, onRefresh }) {
             return (
               <li
                 key={rev.id}
-                className="rounded-lg border border-gray-300 bg-white p-3"
+                className="rounded-xl border bg-white p-4 shadow-sm dark:bg-slate-800 dark:border-slate-700"
               >
                 <div className="font-semibold">
                   {rev.user?.name || "Anonymous"} – {rev.rating}/5
@@ -93,7 +93,7 @@ export default function ReviewsList({ eventId, refreshKey, onRefresh }) {
                   <div className="mt-2">
                     <button
                       onClick={() => handleDelete(rev.id)}
-                      className="rounded border border-gray-300 px-2 py-1 text-sm"
+                      className="rounded-lg border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-60 dark:border-red-900 dark:bg-slate-800 dark:text-red-400 dark:hover:bg-red-950"
                     >
                       Delete
                     </button>

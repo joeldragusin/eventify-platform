@@ -42,7 +42,11 @@ export default function AuthBootstrap({ children }) {
   }, [dispatch]);
 
   if (bootstrapping) {
-    return <p style={{ padding: 24 }}>Checking session...</p>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <p className="text-sm text-slate-600 dark:text-slate-400">Checking session...</p>
+      </div>
+    );
   }
 
   //after the authentication restore the app is rendered as usual

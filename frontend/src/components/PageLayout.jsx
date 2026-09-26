@@ -27,18 +27,18 @@ export default function PageLayout({
   const maxWidth = WIDTHS[width] || WIDTHS.lg;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="border-b bg-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+      <header className="border-b bg-white dark:bg-slate-800 dark:border-slate-700">
         <div
           className={`mx-auto flex ${maxWidth} flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4`}
         >
-          <h1 className="text-xl font-bold text-slate-900">{title}</h1>
+          <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">{title}</h1>
 
           <div className="flex items-center gap-3">
             {actions}
             <Link
               to={backTo}
-              className="text-sm text-slate-600 hover:text-slate-900"
+              className="text-sm text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
             >
               {backLabel}
             </Link>

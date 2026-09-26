@@ -55,7 +55,7 @@ export default function ReviewCreateForm({ eventId, onCreated }) {
   }
 
   return (
-    <div className="mt-4 rounded-lg border border-gray-300 bg-white p-3">
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-900">
       <h3 className="m-0 mb-3 text-lg font-semibold">Leave a review</h3>
 
       <form onSubmit={handleSubmit} className="space-y-3">
@@ -69,7 +69,7 @@ export default function ReviewCreateForm({ eventId, onCreated }) {
             max="5"
             value={rating}
             onChange={(e) => setRating(e.target.value)}
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
           />
         </div>
 
@@ -79,19 +79,19 @@ export default function ReviewCreateForm({ eventId, onCreated }) {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={3}
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="rounded border border-gray-300 px-3 py-2 text-sm disabled:opacity-60"
+          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
         >
           {loading ? "Sending..." : "Submit review"}
         </button>
 
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
       </form>
     </div>
   );

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import api from "../../api/axios";
+import PageLayout from "../../components/PageLayout.jsx";
 
 export default function DeleteEventPage() {
   //we make sure frontend logic is aware of the backend eventId by reading it from the browser
@@ -17,7 +18,7 @@ export default function DeleteEventPage() {
   //the remaining form states are obvious: loading to load the event, or error in case something happens
   const [event, setEvent] = useState(null);
   const [deleting, setDeleting] = useState(false);
-  const [laoding, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   //list by id the event so we can later rend it
@@ -67,55 +68,58 @@ export default function DeleteEventPage() {
     }
   }
 
-  if (laoding) return <p style={{ padding: 24 }}>Loading...</p>;
-
   return (
-    <div className="flex justify-center">
-      <div className="w-full max-w-2xl p-6">
-        <h1 className="text-2xl font-bold">Delete Event</h1>
+    <PageLayout
+      title="Delete Event"
+      backTo={`/events/${id}`}
+      backLabel="Back to Event"
+      width="md"
+    >
+      {loading && <p className="text-slate-600 dark:text-slate-400">Loading...</p>}
 
-        {laoding && <p className="mt-2 text-gray-600">Loading...</p>}
+      {error && <p className="text-red-600 dark:text-red-400">{error}</p>}
 
-        {error && <p className="mt-2 text-red-600">{error}</p>}
+      {!loading && !error && !event && (
+        <div className="rounded-xl border bg-white p-4 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">
+          Event not found.
+        </div>
+      )}
 
-        {!laoding && !error && !event && (
-          <p className="mt-4">Event not found.</p>
-        )}
+      {!loading && event && (
+        <div className="rounded-xl border bg-white p-4 shadow-sm dark:bg-slate-800 dark:border-slate-700">
+          <p className="text-slate-700 dark:text-slate-300">
+            You are about to delete:
+            <span className="ml-1 font-semibold text-slate-900 dark:text-slate-100">
+              {event.title}
+            </span>
+          </p>
 
-        {!laoding && event && (
-          <>
-            <p className="mt-4">
-              You are about to delete:
-              <span className="ml-1 font-semibold">{event.title}</span>
+          {!canDelete && (
+            <p className="mt-4 text-red-600 dark:text-red-400">
+              You are not allowed to delete this event!
             </p>
+          )}
 
-            {!canDelete && (
-              <p className="mt-4 text-red-600">
-                You are not allowed to delete this event!
-              </p>
-            )}
+          {canDelete && (
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                onClick={deleteEvent}
+                disabled={deleting}
+                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
+              >
+                {deleting ? "Deleting..." : "Yes, delete"}
+              </button>
 
-            {canDelete && (
-              <div className="mt-6 flex gap-3">
-                <button
-                  onClick={deleteEvent}
-                  disabled={deleting}
-                  className="rounded border border-gray-300 px-4 py-2"
-                >
-                  {deleting ? "Deleting..." : "Yes, delete"}
-                </button>
-
-                <Link
-                  to={`/events/${id}`}
-                  className="rounded border border-gray-300 px-4 py-2"
-                >
-                  Cancel
-                </Link>
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+              <Link
+                to={`/events/${id}`}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+              >
+                Cancel
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
+    </PageLayout>
   );
 }
