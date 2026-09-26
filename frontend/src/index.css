@@ -7,6 +7,14 @@ body {
   height: 100%;
 }
 
+/* Always render the app in its light theme with an explicit background, so
+   pages never depend on the browser's default canvas colour. */
+html {
+  color-scheme: light;
+}
+
 body {
   margin: 0;
+  background-color: #f8fafc; /* slate-50 */
+  color: #0f172a; /* slate-900 */
 }
