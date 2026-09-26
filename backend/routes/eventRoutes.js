@@ -37,7 +37,7 @@ router.patch(
 router.delete(
   "/:id",
   requireAuth,
-  requireRole(["EVENT_PLANENR", "ADMIN"]),
+  requireRole(["EVENT_PLANNER", "ADMIN"]),
   deleteEvent
 );
 
