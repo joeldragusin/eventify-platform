@@ -1,6 +1,14 @@
 import prisma from "../utils/prismaClient.js";
-import bcrypt, { hash } from "bcryptjs";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
+//simple, good-enough email shape check (not a full RFC 5322 validator)
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MIN_PASSWORD_LENGTH = 8;
+
+//cookies must be "secure" (HTTPS only) in production; over plain HTTP in
+//local development the browser would silently drop a secure cookie
+const isProd = process.env.NODE_ENV === "production";
 
 export const register = async (req, res) => {
   try {
@@ -11,6 +19,16 @@ export const register = async (req, res) => {
       return res
         .status(400)
         .json({ error: "Your email and password are mandatory!" });
+    }
+
+    if (!EMAIL_RE.test(email)) {
+      return res.status(400).json({ error: "Please enter a valid email address." });
+    }
+
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      return res.status(400).json({
+        error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters long.`,
+      });
     }
 
     //Verificare existenta a userului asociat mailului din login
@@ -69,15 +87,21 @@ export const login = async (req, res) => {
       where: { email },
     });
 
+    //Same error message whether the email or the password is wrong, so a
+    //failed attempt cannot be used to find out which emails have an account
+    //(account enumeration).
+    const invalidCredentials = () =>
+      res.status(400).json({ error: "Email or password is incorrect!" });
+
     if (!user) {
-      return res.status(400).json({ error: "Email or password is incorrect!" });
+      return invalidCredentials();
     }
 
     //Check if hashed password from DB matches the introduced one
     const passwdIsValid = await bcrypt.compare(password, user.password);
 
     if (!passwdIsValid) {
-      return res.status(400).json({ error: "Your password is incorrect." });
+      return invalidCredentials();
     }
 
     //JWT creation is needed for users since we have different roles for users
@@ -91,9 +115,11 @@ export const login = async (req, res) => {
     );
 
     //set the http-only cookie which contains the token
+    //"secure" is only forced on in production: over plain HTTP (local dev)
+    //a secure cookie would be silently dropped by the browser
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, //this is diploma thesis so I won't need https as for PROD env
+      secure: isProd,
       sameSite: "lax",
       maxAge: 14 * 24 * 60 * 60 * 1000,
     });
@@ -117,9 +143,11 @@ export const getMe = (req, res) => {
 
 export const logout = (req, res) => {
   //here the "token" cookie gets deleted
+  //clearCookie must be called with the same options the cookie was set
+  //with (httpOnly/secure/sameSite), or the browser won't match and remove it
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,
+    secure: isProd,
     sameSite: "lax",
   });
 
