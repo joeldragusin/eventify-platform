@@ -1,5 +1,14 @@
 import prisma from "../utils/prismaClient.js";
 
+//error used only to unwind $transaction and tell it to roll back; caught
+//below and turned into a normal 400 response (see createOrder)
+class InsufficientStockError extends Error {
+  constructor(ticketName, available) {
+    super(`Not enough stock for ticket "${ticketName}". Availability: ${available}`);
+    this.name = "InsufficientStockError";
+  }
+}
+
 export const createOrder = async (req, res) => {
   try {
     //citesc inputul din browserul clientului sau din Postman
@@ -15,13 +24,13 @@ export const createOrder = async (req, res) => {
     //transform datele ticketId si quantity din cosul clientului din string in int
     //un request JSON, fie din PROD env (de la client/browser) fie din Postman (QA) va fi trimis ca si string
     //iar ticketId si quano=ity sunt acceptate in DB doar ca int (schema.prisma)
-    const normalized = orderItems.map((it) => ({
+    const normalizedRaw = orderItems.map((it) => ({
       ticketId: Number(it.ticketId),
       quantity: Number(it.quantity),
     }));
 
     //validez ca ticketId si quantity exista sub forma potrivita, pt un troubleshoot curat
-    for (const it of normalized) {
+    for (const it of normalizedRaw) {
       if (!it.ticketId || it.ticketId <= 0 || Number.isNaN(it.ticketId)) {
         return res
           .status(400)
@@ -33,6 +42,20 @@ export const createOrder = async (req, res) => {
           .json({ error: "Invalid quantity in orderItems." });
       }
     }
+
+    //daca acelasi ticketId apare de mai multe ori in cos, il combin intr-o
+    //singura linie, ca sa nu numaram gresit stocul disponibil mai jos
+    const quantityByTicketId = new Map();
+    for (const it of normalizedRaw) {
+      quantityByTicketId.set(
+        it.ticketId,
+        (quantityByTicketId.get(it.ticketId) || 0) + it.quantity,
+      );
+    }
+    const normalized = Array.from(
+      quantityByTicketId,
+      ([ticketId, quantity]) => ({ ticketId, quantity }),
+    );
 
     //normalizez din nou ticketId-ul/-urile din req.body normalizat si filtrez dupa el/ele in baza de date, ca sa vad daca exista
     //se resupune ca la aceasta etapa am deja event-ul si tichetele inregistrate de catre un event_planner
@@ -48,6 +71,9 @@ export const createOrder = async (req, res) => {
         .json({ error: "One or more tickets do not exist." });
     }
 
+    //verificare rapida pt un mesaj de eroare prietenos (UX); stocul real este
+    //re-verificat atomic in tranzactie mai jos, ca sa evitam suprarezervarea
+    //cand doua comenzi ajung in acelasi timp
     for (const it of normalized) {
       const t = tickets.find((x) => x.id === it.ticketId);
       if (t.quantity < it.quantity) {
@@ -78,6 +104,22 @@ export const createOrder = async (req, res) => {
       for (const it of normalized) {
         const t = tickets.find((x) => x.id === it.ticketId);
 
+        //decrementul e conditionat de "mai e stoc suficient chiar acum"
+        //(nu doar la citirea de mai sus). updateMany + where cu quantity
+        //este atomic la nivel de baza de date, deci doua comenzi simultane
+        //nu mai pot ambele "trece" pentru ultimul tichet ramas.
+        const updateResult = await tx.ticket.updateMany({
+          where: { id: t.id, quantity: { gte: it.quantity } },
+          data: { quantity: { decrement: it.quantity } },
+        });
+
+        if (updateResult.count === 0) {
+          //arunc din interiorul tranzactiei -> Prisma face rollback automat
+          //la tot ce am facut deja (order + orderItems create pana acum)
+          const fresh = await tx.ticket.findUnique({ where: { id: t.id } });
+          throw new InsufficientStockError(t.name, fresh?.quantity ?? 0);
+        }
+
         await tx.orderItem.create({
           data: {
             orderId: order.id,
@@ -85,11 +127,6 @@ export const createOrder = async (req, res) => {
             quantity: it.quantity,
             unitPrice: t.price,
           },
-        });
-
-        await tx.ticket.update({
-          where: { id: t.id },
-          data: { quantity: { decrement: it.quantity } },
         });
       }
 
@@ -100,6 +137,9 @@ export const createOrder = async (req, res) => {
       .status(201)
       .json({ message: "Order placed with success!", order: createdOrder });
   } catch (error) {
+    if (error instanceof InsufficientStockError) {
+      return res.status(400).json({ error: error.message });
+    }
     console.error("createOrder error: ", error);
     return res.status(500).json({ error: "Server error." });
   }
