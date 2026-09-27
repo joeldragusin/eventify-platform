@@ -129,9 +129,15 @@ export const deleteReview = async (req, res) => {
       return res.status(404).json({ error: "Review is not found." });
     }
 
-    //definesc cine e autorizat sa stearga, execut stergerea din DB si returnez rezultatul
+    //definesc cine e autorizat sa stearga: doar autorul review-ului sau un ADMIN
     const isAdmin = req.user.role === "ADMIN";
     const isOwner = review.userId === req.user.id;
+
+    if (!isAdmin && !isOwner) {
+      return res
+        .status(403)
+        .json({ error: "You are not allowed to delete this review." });
+    }
 
     await prisma.review.delete({
       where: { id: idNum },
