@@ -6,14 +6,15 @@ import {
   logout,
 } from "../controllers/authController.js";
 import { requireAuth } from "../middleware/requireAuth.js";
+import { authLimiter } from "../middleware/rateLimit.js";
 
 const router = Router();
 
 //POST /api/auth/register
-router.post("/register", register);
+router.post("/register", authLimiter, register);
 
 //POST /api/router/login
-router.post("/login", login);
+router.post("/login", authLimiter, login);
 
 //since it requires auth, this endpoint is protected
 router.get("/me", requireAuth, getMe);
